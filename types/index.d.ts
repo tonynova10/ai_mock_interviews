@@ -48,7 +48,7 @@ interface InterviewCardProps {
 }
 
 interface AgentProps {
-  userName: string;
+  userName: string | undefined;
   userId?: string;
   interviewId?: string;
   feedbackId?: string;
@@ -67,7 +67,7 @@ interface GetFeedbackByInterviewIdParams {
 }
 
 interface GetLatestInterviewsParams {
-  userId: string;
+  userId: string | undefined;
   limit?: number;
 }
 

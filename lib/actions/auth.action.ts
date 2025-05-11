@@ -84,11 +84,10 @@ export const setSessionCoockie = async (idToken: string) => {
   });
 };
 
-export const getCurrentUser = async (): Promise<User | null> => {
+export async function getCurrentUser(): Promise<User | null> {
   const cookieStore = await cookies();
 
   const sessionCookie = cookieStore.get("session")?.value;
-
   if (!sessionCookie) return null;
 
   try {
@@ -97,7 +96,6 @@ export const getCurrentUser = async (): Promise<User | null> => {
       .collection("users")
       .doc(decodedClaims.uid)
       .get();
-
     if (!userRecord.exists) return null;
 
     return {
@@ -108,10 +106,43 @@ export const getCurrentUser = async (): Promise<User | null> => {
     console.log(error);
     return null;
   }
-};
+}
 
 export const isAuthenticated = async () => {
   const user = getCurrentUser();
 
   return !!user;
+};
+
+export const getInterviewByUserId = async (
+  userId: string | undefined
+): Promise<Interview[]> => {
+  const interviews = await db
+    .collection("interviews")
+    .where("userId", "==", userId)
+    .orderBy("createdAt", "desc")
+    .get();
+
+  return interviews.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  })) as Interview[];
+};
+
+export const getLatestInterviews = async (
+  params: GetLatestInterviewsParams
+): Promise<Interview[]> => {
+  const { userId, limit = 20 } = params;
+  const interviews = await db
+    .collection("interviews")
+    .orderBy("createdAt", "desc")
+    .where("finalized", "==", true)
+    .where("userId", "!=", userId)
+    .limit(limit)
+    .get();
+
+  return interviews.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  })) as Interview[];
 };
