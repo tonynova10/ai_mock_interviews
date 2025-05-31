@@ -88,6 +88,24 @@ const Page = async ({ params }: RouteParams) => {
         </ul>
       </div>
 
+      <div className="flex flex-col gap-3">
+        <h3>Questions to focus & helpful resources</h3>
+        <ul>
+          {feedback?.resources?.map((resource, index) => (
+            <div key={index}>
+              <p className="mb-3">{resource.question}</p>
+              <ul>
+                {resource.links.map((link, index) => (
+                  <li key={index}>
+                    <a href={link}>{link}</a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </ul>
+      </div>
+
       <div className="buttons">
         <Button className="btn-secondary flex-1">
           <Link href="/" className="flex w-full justify-center">

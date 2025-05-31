@@ -62,6 +62,7 @@ export const createFeedback = async (params: CreateFeedbackParams) => {
         strengths,
         areasForImprovement,
         finalAssessment,
+        resources
       },
     } = await generateObject({
       model: google("gemini-2.0-flash-001", { structuredOutputs: false }),
@@ -77,6 +78,8 @@ export const createFeedback = async (params: CreateFeedbackParams) => {
         - **Problem-Solving**: Ability to analyze problems and propose solutions.
         - **Cultural & Role Fit**: Alignment with company values and job role.
         - **Confidence & Clarity**: Confidence in responses, engagement, and clarity.
+
+        Please provide the questions the user failed to answer and provide a list of links and resources for each question.
         `,
       system:
         "You are a professional interviewer analyzing a mock interview. Your task is to evaluate the candidate based on structured categories",
@@ -90,6 +93,7 @@ export const createFeedback = async (params: CreateFeedbackParams) => {
       strengths,
       areasForImprovement,
       finalAssessment,
+      resources,
       createdAt: new Date().toISOString()
     });
 
