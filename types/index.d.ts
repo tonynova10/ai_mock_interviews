@@ -11,6 +11,7 @@ interface Feedback {
   areasForImprovement: string[];
   finalAssessment: string;
   createdAt: string;
+  userId: string;
 }
 
 interface Interview {
@@ -45,6 +46,7 @@ interface InterviewCardProps {
   type: string;
   techstack: string[];
   createdAt?: string;
+  level?: string;
 }
 
 interface AgentProps {

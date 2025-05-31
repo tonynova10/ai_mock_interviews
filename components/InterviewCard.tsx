@@ -5,6 +5,9 @@ import { Button } from "./ui/button";
 import Link from "next/link";
 import DisplayTechIcons from "./DisplayTechIcons";
 import { getFeedbackByInterviewId } from "@/lib/actions/general.action";
+import {
+  getCurrentUser
+} from "@/lib/actions/auth.action";
 
 const InterviewCard = async ({
   id,
@@ -13,7 +16,9 @@ const InterviewCard = async ({
   type,
   techstack,
   createdAt,
+  level
 }: InterviewCardProps) => {
+  const user = await getCurrentUser();
   const feedback =
     userId && id
       ? await getFeedbackByInterviewId({
@@ -21,6 +26,7 @@ const InterviewCard = async ({
           userId,
         })
       : null;
+  const isUserFeedback = user?.id === feedback?.userId;
   const normalizedType = /mix/gi.test(type) ? "Mixed" : type;
   const formatedDate = dayjs(
     feedback?.createdAt || createdAt || Date.now()
@@ -56,6 +62,12 @@ const InterviewCard = async ({
               <p>{feedback?.totalScore || "---"}/100</p>
             </div>
           </div>
+          <div className="flex flex-row gap-5 mt-3">
+            <div className="flex flex-row gap-2">
+              <Image src="/globe.svg" alt="globe" width={22} height={22}/>
+              <p>{level}</p>
+            </div>
+          </div>
           <p className="line-clamp-2 mt-5">
             {feedback?.finalAssessment ||
               "You haven't taken the interview yet. Take it now to improve your skills."}
@@ -66,12 +78,12 @@ const InterviewCard = async ({
           <Button className="btn-primary">
             <Link
               href={
-                feedback
+                feedback && isUserFeedback
                   ? `/interview/${id}/feedback`
                   : `/interview/${id}`
               }
             >
-              {feedback ? "Check Feddback" : "View Interview"}
+              {feedback && isUserFeedback ? "Check Feedback" : "View Interview"}
             </Link>
           </Button>
         </div>
