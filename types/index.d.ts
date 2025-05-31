@@ -12,6 +12,7 @@ interface Feedback {
   finalAssessment: string;
   createdAt: string;
   userId: string;
+  resources: Array<{ links: string[]; question: string }>;
 }
 
 interface Interview {
