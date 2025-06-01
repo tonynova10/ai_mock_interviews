@@ -97,7 +97,9 @@ const Page = async ({ params }: RouteParams) => {
               <ul>
                 {resource.links.map((link, index) => (
                   <li key={index}>
-                    <a href={link}>{link}</a>
+                    <a target="_blank" rel="noopener noreferrer" href={link}>
+                      {link}
+                    </a>
                   </li>
                 ))}
               </ul>

@@ -107,9 +107,3 @@ export async function getCurrentUser(): Promise<User | null> {
     return null;
   }
 }
-
-export const isAuthenticated = async () => {
-  const user = getCurrentUser();
-
-  return !!user;
-};
