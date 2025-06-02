@@ -65,10 +65,8 @@ const Agent = ({
     };
   }, []);
 
-  const handleGenerateFeedback = async (messages: SavedMessage[]) => {
-    console.log("Generate feedback here.");
-
-    // TODO: Create server action that generates feedback
+  useEffect(() => {
+    const handleGenerateFeedback = async (messages: SavedMessage[]) => {
     const { success, feedbackId: id } = await createFeedback({
       interviewId: interviewId!,
       userId: userId!,
@@ -81,8 +79,6 @@ const Agent = ({
       router.push("/");
     }
   };
-
-  useEffect(() => {
     if (callStatus === CallStatus.FINISHED) {
       if (type === "generate") {
         router.push("/");
@@ -91,7 +87,7 @@ const Agent = ({
       }
     }
     if (callStatus === CallStatus.FINISHED) router.push("/");
-  }, [messages, callStatus, type, userId, router]);
+  }, [messages, callStatus, type, userId, router, interviewId]);
 
   const handleCall = async () => {
     setCallStatus(CallStatus.CONNECTING);

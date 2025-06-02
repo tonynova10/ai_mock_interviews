@@ -84,7 +84,7 @@ export const setSessionCoockie = async (idToken: string) => {
   });
 };
 
-export async function getCurrentUser(): Promise<User | null> {
+export const getCurrentUser = async (): Promise<User | null> => {
   const cookieStore = await cookies();
 
   const sessionCookie = cookieStore.get("session")?.value;
@@ -106,4 +106,10 @@ export async function getCurrentUser(): Promise<User | null> {
     console.log(error);
     return null;
   }
-}
+};
+
+export const signOut = async () => {
+  const cookieStore = await cookies();
+
+  cookieStore.delete("session");
+};
