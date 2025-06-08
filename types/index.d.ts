@@ -50,6 +50,25 @@ interface InterviewCardProps {
   level?: string;
 }
 
+interface FeedbackCardProps {
+  feedbackId?: string;
+  userId?: string;
+  role: string;
+  tryNumber: number;
+  score: number;
+  createdAt: string;
+  areasForImprovement: number;
+}
+
+interface ScoreData {
+  try: string;
+  score: number;
+}
+
+interface TableDataProps {
+  tableData: ScoreData[];
+}
+
 interface AgentProps {
   userName: string | undefined;
   userId?: string;
@@ -66,6 +85,11 @@ interface RouteParams {
 
 interface GetFeedbackByInterviewIdParams {
   interviewId: string;
+  userId: string | undefined;
+}
+
+interface GetFeedbackByIdParams {
+  feedbackId: string;
   userId: string | undefined;
 }
 

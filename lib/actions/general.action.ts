@@ -1,4 +1,4 @@
-"use server"
+"use server";
 
 import { feedbackSchema } from "@/constants";
 import { db } from "@/firebase/admin";
@@ -62,7 +62,7 @@ export const createFeedback = async (params: CreateFeedbackParams) => {
         strengths,
         areasForImprovement,
         finalAssessment,
-        resources
+        resources,
       },
     } = await generateObject({
       model: google("gemini-2.0-flash-001", { structuredOutputs: false }),
@@ -94,13 +94,13 @@ export const createFeedback = async (params: CreateFeedbackParams) => {
       areasForImprovement,
       finalAssessment,
       resources,
-      createdAt: new Date().toISOString()
+      createdAt: new Date().toISOString(),
     });
 
     return {
       success: true,
-      feedbackId: feedback.id
-    }
+      feedbackId: feedback.id,
+    };
   } catch (e) {
     console.error("Error saving feedback", e);
     return { success: false };
@@ -118,10 +118,42 @@ export const getFeedbackByInterviewId = async (
     .limit(1)
     .get();
 
-  if(feedback.empty) return null;
+  if (feedback.empty) return null;
 
   const feedbackDoc = feedback.docs[0];
   return {
-    id: feedbackDoc.id, ...feedbackDoc.data()
+    id: feedbackDoc.id,
+    ...feedbackDoc.data(),
+  } as Feedback;
+};
+
+export const getAllFeedbacksByInterviewId = async (
+  params: GetFeedbackByInterviewIdParams
+): Promise<Feedback[] | null> => {
+  const { interviewId, userId } = params;
+  const feedbacks = await db
+    .collection("feedback")
+    .where("interviewId", "==", interviewId)
+    .where("userId", "==", userId)
+    .get();
+
+  if (feedbacks.empty) return null;
+
+  return feedbacks.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  })) as Feedback[];
+};
+
+export const getFeedbackById = async (
+  params: GetFeedbackByIdParams
+): Promise<Feedback | null> => {
+  const { feedbackId } = params;
+
+  const feedback = await db.collection("feedback").doc(feedbackId).get();
+
+  return {
+    id: feedback.id,
+    ...feedback.data(),
   } as Feedback;
 };
