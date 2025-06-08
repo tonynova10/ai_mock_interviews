@@ -73,7 +73,7 @@ const Agent = ({
       transcript: messages
     })
     if (success && id) {
-      router.push(`/interview/${interviewId}/feedback`);
+      router.push(`/feedback/${id}`);
     } else {
       console.log("Error saving feedback");
       router.push("/");

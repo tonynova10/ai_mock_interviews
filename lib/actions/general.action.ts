@@ -133,6 +133,7 @@ export const getAllFeedbacksByInterviewId = async (
   const { interviewId, userId } = params;
   const feedbacks = await db
     .collection("feedback")
+    .orderBy("createdAt", "asc")
     .where("interviewId", "==", interviewId)
     .where("userId", "==", userId)
     .get();
