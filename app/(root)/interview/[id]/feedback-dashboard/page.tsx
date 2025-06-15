@@ -1,5 +1,5 @@
 import FeedbackCard from "@/components/FeedbackCard";
-import TestChart from "@/components/TestChart";
+import StatsChart from "@/components/StatsChart";
 
 import { getCurrentUser } from "@/lib/actions/auth.action";
 import {
@@ -19,7 +19,15 @@ const Page = async ({ params }: RouteParams) => {
   const interview = await getInterviewById(id);
 
   const tableData = feedbacks?.map((feedback, index) => {
-    return { try: `Try ${index + 1}`, score: feedback.totalScore };
+    return {
+      try: `Try ${index + 1}`,
+      score: feedback.totalScore,
+      comSkills: feedback.categoryScores[0].score,
+      techKnowledge: feedback.categoryScores[1].score,
+      probSolving: feedback.categoryScores[2].score,
+      culturalFit: feedback.categoryScores[3].score,
+      cAndC: feedback.categoryScores[4].score,
+    };
   }) as ScoreData[];
 
   return (
@@ -39,7 +47,15 @@ const Page = async ({ params }: RouteParams) => {
             ></FeedbackCard>
           ))}
         </div>
-        <TestChart tableData={tableData} />
+        <StatsChart tableData={tableData} />
+      </section>
+      <section className="card-cta">
+        <div className="flex flex-col gap-6 ">
+          <h2>We have detected that your opportinity area is...</h2>
+          <p className="text-lg">
+            Here is more info about your progress in that particular area
+          </p>
+        </div>
       </section>
     </>
   );
