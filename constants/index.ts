@@ -234,3 +234,11 @@ export const dummyInterviews: Interview[] = [
     createdAt: "2024-03-15T15:30:00Z",
   },
 ];
+
+export const categories = [
+  "Communication Skills",
+  "Technical Skills",
+  "Problem Solving",
+  "Cultural Fit",
+  "Confidence and Clarity",
+];
