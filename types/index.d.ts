@@ -63,6 +63,11 @@ interface FeedbackCardProps {
 interface ScoreData {
   try: string;
   score: number;
+  comSkills: number;
+  techKnowledge: number;
+  probSolving: number;
+  culturalFit: number;
+  cAndC: number;
 }
 
 interface TableDataProps {
