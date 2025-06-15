@@ -129,7 +129,7 @@ export const getFeedbackByInterviewId = async (
 
 export const getAllFeedbacksByInterviewId = async (
   params: GetFeedbackByInterviewIdParams
-): Promise<Feedback[] | null> => {
+): Promise<Feedback[]> => {
   const { interviewId, userId } = params;
   const feedbacks = await db
     .collection("feedback")
@@ -138,7 +138,7 @@ export const getAllFeedbacksByInterviewId = async (
     .where("userId", "==", userId)
     .get();
 
-  if (feedbacks.empty) return null;
+  if (feedbacks.empty) return [];
 
   return feedbacks.docs.map((doc) => ({
     id: doc.id,
