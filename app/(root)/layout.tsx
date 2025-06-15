@@ -20,7 +20,10 @@ const RootLayout = async ({ children }: { children: ReactNode }) => {
             <h2 className="text-primary-100">PrepWise</h2>
           </Link>
           <div className="ml-auto">
-            <SignOutButton />
+            <span className="mx-2">Hi, {user.name}</span>
+            <span>
+              <SignOutButton />
+            </span>
           </div>
         </div>
       </nav>
