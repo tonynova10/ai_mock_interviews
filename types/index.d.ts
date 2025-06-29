@@ -82,6 +82,10 @@ interface TableDataProps {
   tableData: ScoreData[];
 }
 
+interface BreadcrumbsProps {
+  interviewId: string | undefined;
+}
+
 interface AgentProps {
   userName: string | undefined;
   userId?: string;
