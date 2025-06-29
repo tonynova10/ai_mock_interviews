@@ -24,6 +24,7 @@ const authFormSchema = (type: FormType) => {
     capability: type === "sign-up" ? z.string() : z.string().optional(),
     email: z.string().email(),
     password: z.string().min(3),
+    isAdmin: z.boolean(),
   });
 };
 
@@ -38,6 +39,7 @@ const AuthForm = ({ type }: { type: FormType }) => {
       capability: "",
       email: "",
       password: "",
+      isAdmin: false
     },
   });
 
@@ -45,12 +47,12 @@ const AuthForm = ({ type }: { type: FormType }) => {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       if (type === "sign-up") {
-        const { name, email, password, capability } = values;
+        const { name, email, password, capability, isAdmin } = values;
 
         const userCredentials = await createUserWithEmailAndPassword(
           auth,
           email,
-          password
+          password,
         );
 
         const result = await signUp({
@@ -59,6 +61,7 @@ const AuthForm = ({ type }: { type: FormType }) => {
           email,
           password,
           capability: capability!,
+          isAdmin
         });
 
         if (!result?.success) {
