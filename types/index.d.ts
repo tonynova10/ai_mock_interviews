@@ -27,6 +27,12 @@ interface Interview {
   finalized: boolean;
 }
 
+interface Capability {
+  id: string;
+  name: string;
+  value: string;
+}
+
 interface CreateFeedbackParams {
   interviewId: string;
   userId: string;
@@ -113,6 +119,7 @@ interface SignUpParams {
   name: string;
   email: string;
   password: string;
+  capability: string;
 }
 
 type FormType = "sign-in" | "sign-up";
