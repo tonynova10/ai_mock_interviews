@@ -1,3 +1,4 @@
+import FeedbackBreadcrumbs from "@/components/FeedbackBreadcrumbs";
 import { Button } from "@/components/ui/button";
 import { getCurrentUser } from "@/lib/actions/auth.action";
 import {
@@ -17,13 +18,13 @@ const Page = async ({ params }: RouteParams) => {
 
   return (
     <section className="section-feedback">
+      <FeedbackBreadcrumbs interviewId={feedback?.interviewId} />
       <div className="flex flex-row justify-center">
         <h1 className="text-4xl font-semibold">
           Feedback on the Interview -{" "}
           <span className="capitalize">{interview.role}</span>
         </h1>
       </div>
-
       <div className="flex flex-row justify-center">
         <div className="flex flex-row gap-5">
           <div className="flex flex-row gap-2 items-center">
@@ -47,11 +48,8 @@ const Page = async ({ params }: RouteParams) => {
           </div>
         </div>
       </div>
-
       <hr />
-
       <p>{feedback?.finalAssessment}</p>
-
       <div className="flex flex-col gap-4">
         <h2>Breakdown of the Interview:</h2>
         {feedback?.categoryScores?.map((category, index) => (
@@ -63,7 +61,6 @@ const Page = async ({ params }: RouteParams) => {
           </div>
         ))}
       </div>
-
       <div className="flex flex-col gap-3">
         <h3>Strengths</h3>
         <ul>
@@ -72,7 +69,6 @@ const Page = async ({ params }: RouteParams) => {
           ))}
         </ul>
       </div>
-
       <div className="flex flex-col gap-3">
         <h3>Areas for Improvement</h3>
         <ul>
@@ -81,7 +77,6 @@ const Page = async ({ params }: RouteParams) => {
           ))}
         </ul>
       </div>
-
       <div className="flex flex-col gap-3">
         <h3>Questions to focus & helpful resources</h3>
         <ul>
@@ -101,7 +96,6 @@ const Page = async ({ params }: RouteParams) => {
           ))}
         </ul>
       </div>
-
       <div className="buttons">
         <Button className="btn-secondary flex-1">
           <Link href="/" className="flex w-full justify-center">
