@@ -90,7 +90,7 @@ const Page = async ({ params }: RouteParams) => {
       </section>
       <section className="card-cta">
         <div className="flex flex-col gap-6 ">
-          <h2>We have detected that your opportinity area is {findOpportunityArea()}</h2>
+          <h2>We have detected that your opportunity area is {findOpportunityArea()}</h2>
           <p className="text-lg">
             Here is more info about your progress in that particular area
           </p>

@@ -16,10 +16,12 @@ import {
 } from "firebase/auth";
 import { auth } from "@/firebase/client";
 import { signIn, signUp } from "@/lib/actions/auth.action";
+import FormSelect from "./FormSelect";
 
 const authFormSchema = (type: FormType) => {
   return z.object({
     name: type === "sign-up" ? z.string().min(3) : z.string().optional(),
+    capability: type === "sign-up" ? z.string() : z.string().optional(),
     email: z.string().email(),
     password: z.string().min(3),
   });
@@ -33,6 +35,7 @@ const AuthForm = ({ type }: { type: FormType }) => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
+      capability: "",
       email: "",
       password: "",
     },
@@ -42,7 +45,7 @@ const AuthForm = ({ type }: { type: FormType }) => {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       if (type === "sign-up") {
-        const { name, email, password } = values;
+        const { name, email, password, capability } = values;
 
         const userCredentials = await createUserWithEmailAndPassword(
           auth,
@@ -55,6 +58,7 @@ const AuthForm = ({ type }: { type: FormType }) => {
           name: name!,
           email,
           password,
+          capability: capability!,
         });
 
         if (!result?.success) {
@@ -108,12 +112,20 @@ const AuthForm = ({ type }: { type: FormType }) => {
             className="w-full space-y-6 mt-4 form"
           >
             {!isSignIn && (
-              <FormField
-                control={form.control}
-                name="name"
-                label="Name"
-                placeholder="Your Name"
-              />
+              <>
+                <FormField
+                  control={form.control}
+                  name="name"
+                  label="Name"
+                  placeholder="Your Name"
+                />
+                <FormSelect
+                  control={form.control}
+                  name="capability"
+                  label="Capability"
+                  placeholder="Select your capability"
+                />
+              </>
             )}
             <FormField
               control={form.control}
