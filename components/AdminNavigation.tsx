@@ -7,8 +7,13 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from "./ui/navigation-menu";
+import { getCurrentUser } from "@/lib/actions/auth.action";
 
-const AdminNavigation = () => {
+const AdminNavigation = async () => {
+  const user = await getCurrentUser();
+
+  const historicalRoute = `/historical/${user?.capability}`;
+
   return (
     <NavigationMenu>
       <NavigationMenuList>
@@ -16,7 +21,7 @@ const AdminNavigation = () => {
           <NavigationMenuTrigger>Admin Tools</NavigationMenuTrigger>
           <NavigationMenuContent>
             <NavigationMenuLink asChild>
-              <Link href="/">Historical</Link>
+              <Link href={historicalRoute}>Historical</Link>
             </NavigationMenuLink>
           </NavigationMenuContent>
         </NavigationMenuItem>

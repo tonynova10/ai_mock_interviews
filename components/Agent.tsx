@@ -26,6 +26,8 @@ const Agent = ({
   type,
   interviewId,
   questions,
+  capability,
+  role
 }: AgentProps) => {
   const router = useRouter();
   const [isSpeaking, setIsSpeaking] = useState(false);
@@ -70,7 +72,10 @@ const Agent = ({
     const { success, feedbackId: id } = await createFeedback({
       interviewId: interviewId!,
       userId: userId!,
-      transcript: messages
+      transcript: messages,
+      username: userName!,
+      capability: capability!,
+      interviewRole: role
     })
     if (success && id) {
       router.push(`/feedback/${id}`);
@@ -87,7 +92,7 @@ const Agent = ({
       }
     }
     if (callStatus === CallStatus.FINISHED) router.push("/");
-  }, [messages, callStatus, type, userId, router, interviewId]);
+  }, [messages, callStatus, type, userId, router, interviewId, userName, capability, role]);
 
   const handleCall = async () => {
     setCallStatus(CallStatus.CONNECTING);

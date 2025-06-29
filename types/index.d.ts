@@ -12,7 +12,17 @@ interface Feedback {
   finalAssessment: string;
   createdAt: string;
   userId: string;
+  capability: string;
+  username: string;
+  interviewRole: string;
   resources: Array<{ links: string[]; question: string }>;
+}
+
+interface HistoricData {
+  username: string;
+  role: string;
+  score: number;
+  dateTaken: string;
 }
 
 interface Interview {
@@ -36,8 +46,11 @@ interface Capability {
 interface CreateFeedbackParams {
   interviewId: string;
   userId: string;
+  username: string;
+  capability: string;
   transcript: { role: string; content: string }[];
   feedbackId?: string;
+  interviewRole?: string;
 }
 
 interface User {
@@ -90,9 +103,11 @@ interface AgentProps {
   userName: string | undefined;
   userId?: string;
   interviewId?: string;
+  role?: string;
   feedbackId?: string;
   type: "generate" | "interview";
   questions?: string[];
+  capability: string | undefined;
 }
 
 interface RouteParams {

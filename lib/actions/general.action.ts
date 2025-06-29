@@ -33,7 +33,7 @@ export const getInterviewByIdByUserCap = async (
     id: doc.id,
     ...doc.data(),
   })) as Interview[];
-}
+};
 
 export const getLatestInterviews = async (
   params: GetLatestInterviewsParams
@@ -60,7 +60,14 @@ export const getInterviewById = async (id: string): Promise<Interview> => {
 };
 
 export const createFeedback = async (params: CreateFeedbackParams) => {
-  const { interviewId, userId, transcript } = params;
+  const {
+    interviewId,
+    userId,
+    username,
+    capability,
+    transcript,
+    interviewRole,
+  } = params;
 
   try {
     const formattedTranscript = transcript
@@ -110,6 +117,9 @@ export const createFeedback = async (params: CreateFeedbackParams) => {
       finalAssessment,
       resources,
       createdAt: new Date().toISOString(),
+      username,
+      capability,
+      interviewRole,
     });
 
     return {
@@ -172,4 +182,21 @@ export const getFeedbackById = async (
     id: feedback.id,
     ...feedback.data(),
   } as Feedback;
+};
+
+export const getFeedbacksByCapability = async (
+  capability: string | undefined
+): Promise<Feedback[]> => {
+  const feedbacks = await db
+    .collection("feedback")
+    .orderBy("createdAt", "desc")
+    .where("capability", "==", capability)
+    .get();
+
+  if (feedbacks.empty) return [];
+
+  return feedbacks.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  })) as Feedback[];
 };
