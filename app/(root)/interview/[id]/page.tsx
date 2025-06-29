@@ -39,6 +39,8 @@ const Page = async ({ params }: RouteParams) => {
         interviewId={id}
         type="interview"
         questions={interview.questions}
+        capability={user?.capability}
+        role={interview.role}
       />
     </>
   );
