@@ -20,6 +20,21 @@ export const getInterviewByUserId = async (
   })) as Interview[];
 };
 
+export const getInterviewByIdByUserCap = async (
+  capability: string | undefined
+): Promise<Interview[]> => {
+  const interviews = await db
+    .collection("interviews")
+    .where("capability", "==", capability)
+    .orderBy("createdAt", "desc")
+    .get();
+
+  return interviews.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  })) as Interview[];
+}
+
 export const getLatestInterviews = async (
   params: GetLatestInterviewsParams
 ): Promise<Interview[]> => {
