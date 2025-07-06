@@ -19,9 +19,10 @@ interface Feedback {
 }
 
 interface HistoricData {
+  feedbackId: string;
   username: string;
   role: string;
-  score: number;
+  score: string;
   dateTaken: string;
 }
 

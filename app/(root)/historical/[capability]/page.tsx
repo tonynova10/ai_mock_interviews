@@ -9,9 +9,10 @@ const Page = async ({ params }: RouteParams) => {
 
   const historicData = feedbacks.map((feedback) => {
     const data: HistoricData = {
+      feedbackId: feedback.id,
       username: feedback.username,
       role: feedback.interviewRole,
-      score: feedback.totalScore,
+      score: feedback.totalScore.toString(),
       dateTaken: feedback.createdAt,
     };
 
