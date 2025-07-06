@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown } from "lucide-react";
+import Link from "next/link";
 
 export const historicColumns: ColumnDef<HistoricData>[] = [
   {
@@ -64,5 +65,18 @@ export const historicColumns: ColumnDef<HistoricData>[] = [
       );
     },
     cell: ({ row }) => <div>{row.getValue("dateTaken")}</div>,
+  },
+  {
+    accessorKey: "feedbackId",
+    header: ({}) => {
+      return <div>Feedback</div>;
+    },
+    cell: ({ row }) => (
+      <div>
+        <Link href={`/feedback/${row.getValue("feedbackId")}`}>
+          Go to Feedback
+        </Link>
+      </div>
+    ),
   },
 ];

@@ -1,4 +1,3 @@
-import FeedbackBreadcrumbs from "@/components/FeedbackBreadcrumbs";
 import { Button } from "@/components/ui/button";
 import { getCurrentUser } from "@/lib/actions/auth.action";
 import {
@@ -18,7 +17,7 @@ const Page = async ({ params }: RouteParams) => {
 
   return (
     <section className="section-feedback">
-      <FeedbackBreadcrumbs interviewId={feedback?.interviewId} />
+      {/* <FeedbackBreadcrumbs interviewId={feedback?.interviewId} /> */}
       <div className="flex flex-row justify-center">
         <h1 className="text-4xl font-semibold">
           Feedback on the Interview -{" "}
