@@ -1,9 +1,7 @@
 import InterviewCard from "@/components/InterviewCard";
 import { Button } from "@/components/ui/button";
 import { getCurrentUser } from "@/lib/actions/auth.action";
-import {
-  getInterviewByIdByUserCap,
-} from "@/lib/actions/general.action";
+import { getInterviewByIdByUserCap } from "@/lib/actions/general.action";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
@@ -17,6 +15,8 @@ const Page = async () => {
 
   const hasPastInterviews = interviewsByCap?.length > 0;
 
+  const isAdmin = user?.isAdmin;
+
   return (
     <>
       <section className="card-cta">
@@ -25,9 +25,11 @@ const Page = async () => {
           <p className="text-lg">
             Practice on real interview questions & get instant feedback
           </p>
-          <Button asChild className="btn-primary max-sm:w-full">
-            <Link href="/interview">Start an Interview</Link>
-          </Button>
+          {isAdmin && (
+            <Button asChild className="btn-primary max-sm:w-full">
+              <Link href="/interview">Start an Interview</Link>
+            </Button>
+          )}
         </div>
         <Image
           src="/robot.png"
