@@ -27,7 +27,7 @@ const Page = async () => {
           </p>
           {isAdmin && (
             <Button asChild className="btn-primary max-sm:w-full">
-              <Link href="/interview">Start an Interview</Link>
+              <Link href="/interview">Create an Interview</Link>
             </Button>
           )}
         </div>

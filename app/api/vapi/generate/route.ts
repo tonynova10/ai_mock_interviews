@@ -8,8 +8,8 @@ export const GET = async () => {
 };
 
 export const POST = async (request: Request) => {
-  const { type, role, level, techstack, amount, userid } = await request.json();
-
+  const { type, role, level, techstack, amount, userid, capability } = await request.json();
+  
   try {
     const { text: questions } = await generateText({
       model: google("gemini-2.0-flash-001"),
@@ -31,7 +31,8 @@ export const POST = async (request: Request) => {
       role,
       type,
       level,
-      techstack: techstack.split(","),
+      capability,
+      techstack: techstack.split(", "),
       questions: JSON.parse(questions),
       userId: userid,
       finalized: true,
