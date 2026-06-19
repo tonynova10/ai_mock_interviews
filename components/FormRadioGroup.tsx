@@ -10,7 +10,11 @@ interface FormRadioGroupProps<T extends FieldValues> {
   label: string;
   placeholder?: string;
 }
-const FormRadioGroup = ({ control, name, label }: FormRadioGroupProps<T>) => {
+const FormRadioGroup = <T extends FieldValues>({
+  control,
+  name,
+  label,
+}: FormRadioGroupProps<T>) => {
   return (
     <Controller
       name={name}
