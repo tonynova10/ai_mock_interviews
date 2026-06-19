@@ -3,6 +3,9 @@ import { google } from "@ai-sdk/google";
 import { getRandomInterviewCover } from "@/lib/utils";
 import { db } from "@/firebase/admin";
 
+const GEMINI_MODEL =
+  process.env.GOOGLE_GENERATIVE_AI_MODEL || "gemini-3.5-flash";
+
 export const GET = async () => {
   return Response.json({ success: true, data: "THANK YOU!" }, { status: 200 });
 };
@@ -12,7 +15,7 @@ export const POST = async (request: Request) => {
   
   try {
     const { text: questions } = await generateText({
-      model: google("gemini-2.0-flash-001"),
+      model: google(GEMINI_MODEL),
       prompt: `Prepare questions for a job interview.
       The job interview is ${role}.
       The job experience level is ${level}.

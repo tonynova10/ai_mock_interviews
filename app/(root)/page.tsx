@@ -1,17 +1,19 @@
 import InterviewCard from "@/components/InterviewCard";
+import StandardSelect from "@/components/StandardSelect";
 import { Button } from "@/components/ui/button";
 import { getCurrentUser } from "@/lib/actions/auth.action";
 import { getInterviewByIdByUserCap } from "@/lib/actions/general.action";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
 
 const Page = async () => {
   const user = await getCurrentUser();
 
-  const [interviewsByCap] = await Promise.all([
-    await getInterviewByIdByUserCap(user?.capability),
-  ]);
+  const capability = user?.capability;
+
+  const interviewsByCap = capability
+    ? await getInterviewByIdByUserCap(capability)
+    : [];
 
   const hasPastInterviews = interviewsByCap?.length > 0;
 
@@ -40,7 +42,10 @@ const Page = async () => {
         />
       </section>
       <section className="flex flex-col gap-6 mt-8">
-        <h2>Your Interviews</h2>
+        <h2>Interviews available</h2>
+        <span>
+          <StandardSelect />
+        </span>
         <div className="interviews-section">
           {hasPastInterviews ? (
             interviewsByCap?.map((interview) => (

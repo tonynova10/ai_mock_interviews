@@ -16,7 +16,7 @@ interface FormSelectProps<T extends FieldValues> {
   placeholder?: string;
 }
 
-const FormSelect = ({
+const FormSelect = <T extends FieldValues>({
   control,
   name,
   label,

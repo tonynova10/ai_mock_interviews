@@ -5,6 +5,9 @@ import { db } from "@/firebase/admin";
 import { google } from "@ai-sdk/google";
 import { generateObject } from "ai";
 
+const GEMINI_MODEL =
+  process.env.GOOGLE_GENERATIVE_AI_MODEL || "gemini-3.5-flash";
+
 export const getInterviewByUserId = async (
   userId: string | undefined
 ): Promise<Interview[]> => {
@@ -87,7 +90,7 @@ export const createFeedback = async (params: CreateFeedbackParams) => {
         resources,
       },
     } = await generateObject({
-      model: google("gemini-2.0-flash-001", { structuredOutputs: false }),
+      model: google(GEMINI_MODEL, { structuredOutputs: false }),
       schema: feedbackSchema,
       prompt: `
         You are an AI interviewer analyzing a mock interview. Your task is to evaluate the candidate based on structured categories. Be thorough and detailed in your analysis. Don't be lenient with the candidate. If there are mistakes or areas for improvement, point them out.
@@ -128,7 +131,20 @@ export const createFeedback = async (params: CreateFeedbackParams) => {
     };
   } catch (e) {
     console.error("Error saving feedback", e);
-    return { success: false };
+
+    const errorMessage =
+      e instanceof Error ? e.message : "Failed to create feedback.";
+    const isQuotaError =
+      errorMessage.includes("quota") ||
+      errorMessage.includes("RESOURCE_EXHAUSTED") ||
+      errorMessage.includes("429");
+
+    return {
+      success: false,
+      message: isQuotaError
+        ? "Gemini quota exceeded. Please check your Google AI API billing, quota, or try again later."
+        : "Failed to create feedback. Please try again.",
+    };
   }
 };
 

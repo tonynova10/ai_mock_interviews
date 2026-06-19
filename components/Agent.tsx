@@ -27,15 +27,19 @@ const Agent = ({
   interviewId,
   questions,
   capability,
-  role
+  role,
 }: AgentProps) => {
   const router = useRouter();
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [callStatus, setCallStatus] = useState<CallStatus>(CallStatus.INACTIVE);
+  const [callError, setCallError] = useState<string | null>(null);
   const [messages, setMessages] = useState<SavedMessage[]>([]);
 
   useEffect(() => {
-    const onCallStart = () => setCallStatus(CallStatus.ACTIVE);
+    const onCallStart = () => {
+      setCallError(null);
+      setCallStatus(CallStatus.ACTIVE);
+    };
     const onCallEnd = () => setCallStatus(CallStatus.FINISHED);
 
     const onMessage = (message: Message) => {
@@ -48,7 +52,11 @@ const Agent = ({
     const onSpeechStart = () => setIsSpeaking(true);
     const onSpeechEnd = () => setIsSpeaking(false);
 
-    const onError = (error: Error) => console.log("Error", error);
+    const onError = (error: Error) => {
+      console.error("Vapi error", error);
+      setCallError(error.message || "The interview call could not start.");
+      setCallStatus(CallStatus.INACTIVE);
+    };
 
     vapi.on("call-start", onCallStart);
     vapi.on("call-end", onCallEnd);
@@ -69,21 +77,24 @@ const Agent = ({
 
   useEffect(() => {
     const handleGenerateFeedback = async (messages: SavedMessage[]) => {
-    const { success, feedbackId: id } = await createFeedback({
-      interviewId: interviewId!,
-      userId: userId!,
-      transcript: messages,
-      username: userName!,
-      capability: capability!,
-      interviewRole: role
-    })
-    if (success && id) {
-      router.push(`/feedback/${id}`);
-    } else {
+      const { success, feedbackId: id, message } = await createFeedback({
+        interviewId: interviewId!,
+        userId: userId!,
+        transcript: messages,
+        username: userName!,
+        capability: capability!,
+        interviewRole: role,
+      });
+
+      if (success && id) {
+        router.push(`/feedback/${id}`);
+        return;
+      }
+
       console.log("Error saving feedback");
-      router.push("/");
-    }
-  };
+      setCallError(message || "Error saving feedback.");
+    };
+
     if (callStatus === CallStatus.FINISHED) {
       if (type === "generate") {
         router.push("/");
@@ -91,31 +102,53 @@ const Agent = ({
         handleGenerateFeedback(messages);
       }
     }
-    if (callStatus === CallStatus.FINISHED) router.push("/");
-  }, [messages, callStatus, type, userId, router, interviewId, userName, capability, role]);
+  }, [
+    messages,
+    callStatus,
+    type,
+    userId,
+    router,
+    interviewId,
+    userName,
+    capability,
+    role,
+  ]);
 
   const handleCall = async () => {
+    setCallError(null);
     setCallStatus(CallStatus.CONNECTING);
 
-    if (type === "generate") {
-      await vapi.start(process.env.NEXT_PUBLIC_VAPI_WORKFLOW_ID!, {
-        variableValues: {
-          username: userName,
-          userid: userId,
-        },
-      });
-    } else {
-      let formattedQuestions = '';
+    try {
+      if (type === "generate") {
+        await vapi.start(process.env.NEXT_PUBLIC_VAPI_WORKFLOW_ID!, {
+          variableValues: {
+            username: userName,
+            userid: userId,
+          },
+        });
+      } else {
+        let formattedQuestions = "";
 
-      if(questions) {
-        formattedQuestions = questions.map((question) => `- ${question}`).join(`\n`)
-      }
-
-      await vapi.start(interviewer, {
-        variableValues: {
-          questions: formattedQuestions
+        if (questions) {
+          formattedQuestions = questions
+            .map((question) => `- ${question}`)
+            .join(`\n`);
         }
-      })
+
+        await vapi.start(interviewer, {
+          variableValues: {
+            questions: formattedQuestions,
+          },
+        });
+      }
+    } catch (error) {
+      console.error("Error starting Vapi call", error);
+      setCallError(
+        error instanceof Error
+          ? error.message
+          : "The interview call could not start."
+      );
+      setCallStatus(CallStatus.INACTIVE);
     }
   };
   const handleDisconnect = async () => {
@@ -171,6 +204,9 @@ const Agent = ({
             </p>
           </div>
         </div>
+      )}
+      {callError && (
+        <p className="text-center text-destructive-100">{callError}</p>
       )}
 
       <div className="w-full flex justify-center">
